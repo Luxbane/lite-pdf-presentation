@@ -106,6 +106,11 @@ class AudienceWindow(QMainWindow):
     def keyPressEvent(self, event):
         self.controller.handle_key(event)
 
+    def closeEvent(self, event):
+        if self.controller and self.controller.is_presenting:
+            self.controller.stop_presentation()
+        event.accept()
+
 
 class PresenterWindow(QMainWindow):
     def __init__(self, initial_file=None):
@@ -461,6 +466,10 @@ class PresenterWindow(QMainWindow):
                     event.acceptProposedAction()
                     return
 
+    def closeEvent(self, event):
+        self.stop_presentation()
+        event.accept()
+
     def toggle_presentation(self):
         if self.is_presenting:
             self.stop_presentation()
@@ -495,8 +504,9 @@ class PresenterWindow(QMainWindow):
 
     def stop_presentation(self):
         if self.audience_win:
-            self.audience_win.close()
+            win = self.audience_win
             self.audience_win = None
+            win.close()
         self.is_presenting = False
         self.is_at_end_black = False
         self.btn_start.setText("▶ Start Presentation (F5)")
