@@ -108,7 +108,7 @@ class AudienceWindow(QMainWindow):
 
 
 class PresenterWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, initial_file=None):
         super().__init__()
         self.engine = PDFEngine()
         self.audience_win = None
@@ -128,10 +128,14 @@ class PresenterWindow(QMainWindow):
 
         self.init_ui()
 
+        if initial_file and os.path.isfile(initial_file):
+            self.load_pdf(initial_file)
+
     def init_ui(self):
         self.setWindowTitle("Lite PDF Presentation")
         self.resize(1100, 720)
         self.setMinimumSize(850, 550)
+        self.setAcceptDrops(True)
         self.apply_dark_theme()
 
         main_widget = QWidget()
@@ -190,7 +194,7 @@ class PresenterWindow(QMainWindow):
         lbl_cur_title.setStyleSheet("font-weight: bold; color: #4CAF50;")
         left_layout.addWidget(lbl_cur_title)
 
-        self.lbl_cur_preview = QLabel("Please open a PDF file")
+        self.lbl_cur_preview = QLabel("Please open or drop a PDF file here")
         self.lbl_cur_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lbl_cur_preview.setStyleSheet("background-color: #121212; border-radius: 6px;")
         left_layout.addWidget(self.lbl_cur_preview, 1)
@@ -440,6 +444,23 @@ class PresenterWindow(QMainWindow):
         if self.engine.is_loaded():
             self.render_views()
 
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            for url in event.mimeData().urls():
+                if url.toLocalFile().lower().endswith(".pdf"):
+                    event.acceptProposedAction()
+                    return
+        event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasUrls():
+            for url in event.mimeData().urls():
+                file_path = url.toLocalFile()
+                if file_path.lower().endswith(".pdf") and os.path.isfile(file_path):
+                    self.load_pdf(file_path)
+                    event.acceptProposedAction()
+                    return
+
     def toggle_presentation(self):
         if self.is_presenting:
             self.stop_presentation()
@@ -561,7 +582,12 @@ def main():
     icon_path = get_resource_path("app_icon.ico")
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))
-    window = PresenterWindow()
+
+    initial_file = None
+    if len(sys.argv) > 1 and os.path.isfile(sys.argv[1]) and sys.argv[1].lower().endswith(".pdf"):
+        initial_file = sys.argv[1]
+
+    window = PresenterWindow(initial_file=initial_file)
     window.show()
     sys.exit(app.exec())
 
