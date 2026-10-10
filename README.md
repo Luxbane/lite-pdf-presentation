@@ -19,3 +19,6 @@ Ultra-fast, lightweight, and lag-free PDF presentation tool for Windows with mul
 ## Usage:
 1. **Run directly**: Double-click `run.bat`
 2. **Build standalone EXE**: Double-click `build.bat` (output in `dist/Lite PDF Presentation.exe`)
+
+## License:
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
