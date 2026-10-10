@@ -14,8 +14,18 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
+if not exist ".venv\Scripts\python.exe" (
+    echo [1/3] Creating isolated virtual environment...
+    python -m venv .venv
+    if %errorlevel% neq 0 (
+        echo [ERROR] Failed to create virtual environment!
+        pause
+        exit /b 1
+    )
+)
+
 echo [1/3] Installing / Checking dependencies...
-pip install -r requirements.txt
+call .venv\Scripts\pip.exe install -r requirements.txt
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to install dependencies!
     pause
@@ -29,7 +39,7 @@ if exist "dist\Lite PDF Presentation.exe" del /f /q "dist\Lite PDF Presentation.
 
 echo.
 echo [3/3] Compiling application with PyInstaller...
-pyinstaller --noconsole --onefile --clean --icon="app_icon.ico" --add-data "app_icon.ico;." --name "Lite PDF Presentation" main.py
+call .venv\Scripts\pyinstaller.exe --noconsole --onefile --clean --icon="app_icon.ico" --add-data "app_icon.ico;." --name "Lite PDF Presentation" main.py
 
 if %errorlevel% neq 0 (
     echo.
