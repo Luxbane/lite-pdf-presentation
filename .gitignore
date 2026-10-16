@@ -1,33 +1,32 @@
-# Byte-compiled / optimized / DLL files
+# Build outputs & executables
+*.exe
+*.res
+*.o
+*.obj
+*.orig
+dist/
+/pdfium.dll
+
+# PDFium metadata
+PDFiumConfig.cmake
+VERSION
+args.gn
+licenses/
+
+# Python & Virtual Environments (legacy)
+python_bak/
 __pycache__/
 *.py[cod]
-*$py.class
-
-# PyInstaller build artifacts
-build/
-dist/
-*.spec
-
-# Virtual Environments
-venv/
 .venv/
-env/
-ENV/
-env.bak/
-venv.bak/
+venv/
+build/
+*.spec
 
 # IDE & Editors
 .vscode/
 .idea/
-*.sublime-project
-*.sublime-workspace
 
-# Operating System files
+# OS files
 Thumbs.db
-ehthumbs.db
 Desktop.ini
-$RECYCLE.BIN/
 .DS_Store
-
-# Logs
-*.log
