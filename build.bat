@@ -32,7 +32,7 @@ if errorlevel 1 (
 
 echo.
 echo [2/3] Compiling C++ code with g++ (Optimization -O3)...
-g++.exe -O3 -municode -mwindows main.cpp resource.res -o "Lite PDF Presentation.exe" -Iinclude -Llib -l:pdfium.dll.lib -lcomctl32 -lcomdlg32 -lshell32 -lgdi32 -static-libgcc -static-libstdc++
+g++.exe -O3 -municode -mwindows -static main.cpp resource.res -o "Lite PDF Presentation.exe" -Iinclude -Llib -l:pdfium.dll.lib -lcomctl32 -lcomdlg32 -lshell32 -lgdi32
 if errorlevel 1 (
     echo [ERROR] Compilation failed!
     pause
